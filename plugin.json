@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Payment methods",
+  "FriendlyName": "Zibal",
+  "SystemName": "NopTop.Payments.Zibal",
+  "Version": "4.60.3.1",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "NopTop Team",
+  "DisplayOrder": 1,
+  "FileName": "NopTop.Plugin.Payments.Zibal.dll",
+  "Description": "This plugin allows paying with Zibal Gateway"
+}

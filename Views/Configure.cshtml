@@ -1,0 +1,94 @@
+@model NopTop.Plugin.Payments.Zibal.Models.ConfigurationModel
+@inject Nop.Core.IWebHelper webHelper
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<form asp-controller="PaymentZibal" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                @Html.Raw(T("شما می توانید از زیبال  به عنوان یک درگاه پرداخت استفاده نمایید،  زیبال یک بانک نیست بلکه یک واسط بانکی است که کاربران میتوانند از طریق آن مبلغ مورد نظر را پرداخت نمایند، باید آگاه باشید که درگاه زیبال  درصدی از پول پرداخت شده کاربران را به عنوان کارمزد دریافت میکند"))
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="UseSandbox_OverrideForStore" asp-input="UseSandbox" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="UseSandbox" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="UseSandbox" />
+                        <span asp-validation-for="UseSandbox"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                         <nop-label asp-for="Method" />
+                    </div>
+                    <div class="col-md-9">
+                        <input type="radio" asp-for="Method" value="@((int)EnumMethod.REST)" checked="@(Model.Method==EnumMethod.REST)" id="EnumMethod.REST" />
+                        <label class="forcheckbox" for="Method">@T("فعال")</label>
+        
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="merchant_OverrideForStore" asp-input="merchant" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="merchant" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="merchant" />
+                        <span asp-validation-for="merchant"></span>
+                    </div>
+                </div>
+                @Html.Raw(T("واحد ارزی پیش فرض درگاه پرداخت زیبال تومان می باشد"))
+                <p> در صورتی که وبسایت شما از واحد ارزی ریال استفاده می کند باید قبل از پرداخت مبلغ نهایی به تومان تبدیل گردد
+لطفا در نظر داشته باشید که جهت تبدیل ریال به تومان عدد تقسیم بر 10 شده و در واقع رقم آخر حذف می گردد
+در صورتی که مایل به تغییر از ریال به تومان هنگام پرداخت می باشید این گزینه را فعال نمایید.</p>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-override-store-checkbox asp-for="RialToToman_OverrideForStore" asp-input="RialToToman" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                        <nop-label asp-for="RialToToman" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="RialToToman" />
+                        <span asp-validation-for="RialToToman"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-9 col-md-offset-3">
+                        <input type="submit" name="save" class="btn bg-primary" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $(document).ready(function(){
+        var lastMerchant= $("input[id='merchant']").val();
+        var merchantTest="zibal";
+        $("input[id='UseSandbox']").click( function(){
+            if( $(this).is(':checked') ) 
+              $("input[id='merchant']").val(merchantTest);
+            else
+             $("input[id='merchant']").val(lastMerchant);
+        });
+    });
+
+    function Enabler(checked)
+    {
+        if(checked) 
+            $('#ZibalGateType').removeAttr('disabled'); 
+        else  
+            $('#ZibalGateType').attr('disabled','disabled');
+    }
+    $(document).ready(function(){
+        Enabler('@(Model.UseZibalGate)'.toLowerCase()==='true');
+        $("#UseZibalGate").click( function(){
+            Enabler($(this).is(':checked'));
+        });
+    });
+</script>
